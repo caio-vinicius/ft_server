@@ -1,0 +1,23 @@
+server {
+	listen 443 ssl;
+	listen [::]:443 ssl;
+	include snippets/self-signed.conf
+	
+	root /var/www/html;
+	index index.html index.htm index.nginx-debian.html;
+
+	server_name 127.0.0.1;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+}
+
+server {
+	listen 80;
+	listen [::]:80;
+	
+	server_name 127.0.0.1;
+
+	return 302 https://$server_name$request_uri;
+}
