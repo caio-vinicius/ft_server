@@ -1,4 +1,6 @@
 server {
+	listen 80;
+	listen [::]:80;
 	listen 443 ssl;
 	listen [::]:443 ssl;
 	ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
@@ -12,13 +14,4 @@ server {
 	location / {
 		try_files $uri $uri/ =404;
 	}
-}
-
-server {
-	listen 80;
-	listen [::]:80;
-	
-	server_name 127.0.0.1;
-
-	return 301 https://$server_name$request_uri;
 }
