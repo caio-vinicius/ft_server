@@ -11,7 +11,7 @@ RUN ["apt-get", "install", "nginx", "-y"]
 #install mariadb-server
 RUN ["apt-get", "install", "mariadb-server", "-y"]
 #install php fastcgi process manager and php-mysql
-RUN ["apt-get", "install", "php-fpm", "php-mysql", "-y"]
+RUN ["apt-get", "install", "php-fpm", "php-mysql", "php-mbstring", "php-zip", "php-gd", "-y"]
 #install the best text-editor of all time
 RUN ["apt-get", "install", "vim", "-y"]
 #remove packages already installed
@@ -21,12 +21,13 @@ ARG NGINXPATH=/src/nginx
 ARG SSLCPATH=/etc/ssl
 ARG MARIADBPATH=/src/mariadb
 ARG PMAPATH=/src/pma
+ARG WPPATH=/src/wordpress
 
 #copying key and certificate to configure ssl on nginx
 COPY ["$NGINXPATH/ssl/nginx-selfsigned.crt", "$SSLCPATH/certs/"]
 COPY ["$NGINXPATH/ssl/nginx-selfsigned.key", "$SSLCPATH/private/"]
 
-#setup my own files on nginx
+#setup nginx
 RUN ["rm", "-f", "/etc/nginx/sites-enabled/default"]
 RUN ["rm", "-f", "/etc/nginx/sites-available/default"]
 RUN ["rm", "-f", "/var/www/html/index.nginx-debian.html"]
@@ -34,16 +35,23 @@ COPY ["$NGINXPATH/html/", "/var/www/html/"]
 COPY ["$NGINXPATH/sitesav/ft_server", "/etc/nginx/sites-available/"]
 RUN ["ln", "-s", "/etc/nginx/sites-available/ft_server", "/etc/nginx/sites-enabled/"]
 
+#setup phpMyAdmin
+ADD ["$PMAPATH/pma495.tar.gz", "/"]
+RUN ["mv", "phpMyAdmin-4.9.5-english/", "/usr/share/phpmyadmin"]
+RUN ["mkdir", "-p", "/var/lib/phpmyadmin/tmp"]
+RUN ["chmod", "777", "/var/lib/phpmyadmin/tmp"]
+COPY ["$PMAPATH/config.inc.php", "/usr/share/phpmyadmin/"]
+
 #setup mariadb
 COPY ["$MARIADBPATH/dbconfig.sh", "/"]
 
-#setup phpMyAdmin
-ADD ["$PMAPATH/pma495.tar.gz", "/"]
+#setup wordpress
+ADD ["", ""]
 
 #this container will be exposed on 80 and 443 port
 EXPOSE 80/tcp 443/tcp
 
 #copy script to execute things
 COPY ["cmd.sh", "/"]
-#execute cmd to start nginx and mariadb
+#execute sh to start nginx, mariadb and php-fpm
 ENTRYPOINT ["sh", "cmd.sh"] 
