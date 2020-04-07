@@ -38,7 +38,7 @@ ADD ["$PMAPATH/pma495.tar.gz", "/"]
 RUN ["mv", "phpMyAdmin-4.9.5-english/", "/var/www/phpmyadmin"]
 RUN ["mkdir", "-p", "/var/lib/phpmyadmin/tmp"]
 RUN ["chmod", "777", "/var/lib/phpmyadmin/tmp"]
-COPY ["$PMAPATH/config.inc.php", "/usr/share/phpmyadmin/"]
+COPY ["$PMAPATH/config.inc.php", "/var/www/phpmyadmin/"]
 
 #setup mariadb
 COPY ["$MARIADBPATH/dbconfig.sh", "/"]
