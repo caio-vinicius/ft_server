@@ -27,9 +27,11 @@ COPY ["$NGINXPATH/ssl/nginx-selfsigned.crt", "/etc/ssl/certs/"]
 COPY ["$NGINXPATH/ssl/nginx-selfsigned.key", "/etc/ssl/private/"]
 
 #setup nginx
+ENV AUTOINDEX off
 RUN ["rm", "-f", "/etc/nginx/sites-enabled/default"]
 RUN ["rm", "-f", "/etc/nginx/sites-available/default"]
 RUN ["rm", "-rf", "/var/www/html"]
+COPY ["$NGINXPATH/sites-available/autoindex.sh", "/etc/nginx/sites-available/"]
 COPY ["$NGINXPATH/sites-available/ft_server", "/etc/nginx/sites-available/"]
 RUN ["ln", "-s", "/etc/nginx/sites-available/ft_server", "/etc/nginx/sites-enabled/"]
 

@@ -10,8 +10,7 @@ server {
 	server_name 127.0.0.1;
 
 	location / {
-		try_files $uri $uri/ =404;
-		autoindex on;
+		autoindex off;
 	}
 
 	location ~ \.php$ {
