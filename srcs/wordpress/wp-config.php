@@ -4,7 +4,7 @@ define( 'DB_USER', 'caio' );
 define( 'DB_PASSWORD', '1234' );
 define( 'DB_HOST', 'localhost' );
 define( 'DB_CHARSET', 'utf8' );
-define( 'DB_COLLATE', '' );
+define( 'DB_COLLATE', 'utf8_unicode_ci' );
 
 define( 'AUTH_KEY',         'hlYcG1D8ERfLM0hw95xN12iqG5bJDT9SY5FH1ZvIz9ExiakMbHgBFxCvO11PBNUh' );
 define( 'SECURE_AUTH_KEY',  'fsb8ASYj5qn0oBPbOCRLuHeR2HHaiYpVKMAkMbMxJCYaCPDiby0riYmxWOM0pkNC' );

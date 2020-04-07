@@ -19,7 +19,7 @@ RUN ["apt-get", "clean"]
 
 ARG NGINXPATH=/srcs/nginx
 ARG MARIADBPATH=/srcs/mariadb
-ARG PMAPATH=/srcs/phpMyAdmin
+ARG PMAPATH=/srcs/phpmyadmin
 ARG WPPATH=/srcs/wordpress
 
 #copying key and certificate to configure ssl on nginx
@@ -52,6 +52,6 @@ COPY ["$WPPATH/wp-config.php", "/var/www/wordpress/"]
 EXPOSE 80/tcp 443/tcp
 
 #copy script to execute things
-COPY ["srcs/cmd.sh", "/"]
+COPY ["srcs/init.sh", "/"]
 #execute sh to start nginx, mariadb and php-fpm
-ENTRYPOINT ["sh", "srcs/cmd.sh"] 
+ENTRYPOINT ["sh", "init.sh"] 
