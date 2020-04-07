@@ -6,13 +6,14 @@ server {
 	ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
 	ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;	
 	
-	root /usr/share/phpmyadmin;
-	index index.html index.php index.htm index.nginx-debian.html;
+	root /var/www/;
+	index index.html index.php index.htm;
 
 	server_name 127.0.0.1;
 
 	location / {
 		try_files $uri $uri/ =404;
+		autoindex on;
 	}
 
 	location ~ \.php$ {

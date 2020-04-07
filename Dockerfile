@@ -17,22 +17,20 @@ RUN ["apt-get", "install", "vim", "-y"]
 #remove packages already installed
 RUN ["apt-get", "clean"]
 
-ARG NGINXPATH=/src/nginx
-ARG SSLCPATH=/etc/ssl
-ARG MARIADBPATH=/src/mariadb
-ARG PMAPATH=/src/pma
-ARG WPPATH=/src/wordpress
+ARG NGINXPATH=/srcs/nginx
+ARG MARIADBPATH=/srcs/mariadb
+ARG PMAPATH=/srcs/phpMyAdmin
+ARG WPPATH=/srcs/wordpress
 
 #copying key and certificate to configure ssl on nginx
-COPY ["$NGINXPATH/ssl/nginx-selfsigned.crt", "$SSLCPATH/certs/"]
-COPY ["$NGINXPATH/ssl/nginx-selfsigned.key", "$SSLCPATH/private/"]
+COPY ["$NGINXPATH/ssl/nginx-selfsigned.crt", "/etc/ssl/certs/"]
+COPY ["$NGINXPATH/ssl/nginx-selfsigned.key", "/etc/ssl/private/"]
 
 #setup nginx
 RUN ["rm", "-f", "/etc/nginx/sites-enabled/default"]
 RUN ["rm", "-f", "/etc/nginx/sites-available/default"]
 RUN ["rm", "-f", "/var/www/html/index.nginx-debian.html"]
-COPY ["$NGINXPATH/html/", "/var/www/html/"]
-COPY ["$NGINXPATH/sitesav/ft_server", "/etc/nginx/sites-available/"]
+COPY ["$NGINXPATH/sites-available/ft_server", "/etc/nginx/sites-available/"]
 RUN ["ln", "-s", "/etc/nginx/sites-available/ft_server", "/etc/nginx/sites-enabled/"]
 
 #setup phpMyAdmin
@@ -46,12 +44,14 @@ COPY ["$PMAPATH/config.inc.php", "/usr/share/phpmyadmin/"]
 COPY ["$MARIADBPATH/dbconfig.sh", "/"]
 
 #setup wordpress
-ADD ["", ""]
+ADD ["$WPPATH/wplatest.tar.gz", "/"]
+RUN ["mv", "wordpress/", "/var/www/"]
+COPY ["$WPPATH/wp-config.php", "/var/www/wordpress/"]
 
 #this container will be exposed on 80 and 443 port
 EXPOSE 80/tcp 443/tcp
 
 #copy script to execute things
-COPY ["cmd.sh", "/"]
+COPY ["srcs/cmd.sh", "/"]
 #execute sh to start nginx, mariadb and php-fpm
-ENTRYPOINT ["sh", "cmd.sh"] 
+ENTRYPOINT ["sh", "srcs/cmd.sh"] 
