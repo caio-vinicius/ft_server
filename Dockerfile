@@ -29,13 +29,13 @@ COPY ["$NGINXPATH/ssl/nginx-selfsigned.key", "/etc/ssl/private/"]
 #setup nginx
 RUN ["rm", "-f", "/etc/nginx/sites-enabled/default"]
 RUN ["rm", "-f", "/etc/nginx/sites-available/default"]
-RUN ["rm", "-f", "/var/www/html/index.nginx-debian.html"]
+RUN ["rm", "-rf", "/var/www/html"]
 COPY ["$NGINXPATH/sites-available/ft_server", "/etc/nginx/sites-available/"]
 RUN ["ln", "-s", "/etc/nginx/sites-available/ft_server", "/etc/nginx/sites-enabled/"]
 
 #setup phpMyAdmin
 ADD ["$PMAPATH/pma495.tar.gz", "/"]
-RUN ["mv", "phpMyAdmin-4.9.5-english/", "/usr/share/phpmyadmin"]
+RUN ["mv", "phpMyAdmin-4.9.5-english/", "/var/www/phpmyadmin"]
 RUN ["mkdir", "-p", "/var/lib/phpmyadmin/tmp"]
 RUN ["chmod", "777", "/var/lib/phpmyadmin/tmp"]
 COPY ["$PMAPATH/config.inc.php", "/usr/share/phpmyadmin/"]
