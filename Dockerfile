@@ -10,10 +10,8 @@ RUN ["apt-get", "upgrade", "-y"]
 RUN ["apt-get", "install", "nginx", "-y"]
 #install mariadb-server
 RUN ["apt-get", "install", "mariadb-server", "-y"]
-#install php fastcgi process manager and php-mysql
+#install php modules
 RUN ["apt-get", "install", "php-fpm", "php-mysql", "php-mbstring", "php-zip", "php-gd", "-y"]
-#install the best text-editor of all time
-RUN ["apt-get", "install", "vim", "-y"]
 #remove packages already installed
 RUN ["apt-get", "clean"]
 
@@ -31,6 +29,7 @@ ENV AUTOINDEX off
 RUN ["rm", "-f", "/etc/nginx/sites-enabled/default"]
 RUN ["rm", "-f", "/etc/nginx/sites-available/default"]
 RUN ["rm", "-rf", "/var/www/html"]
+COPY ["$NGINXPATH/sites-available/index.html", "/var/www/"]
 COPY ["$NGINXPATH/sites-available/autoindex.sh", "/etc/nginx/sites-available/"]
 COPY ["$NGINXPATH/sites-available/ft_server", "/etc/nginx/sites-available/"]
 RUN ["ln", "-s", "/etc/nginx/sites-available/ft_server", "/etc/nginx/sites-enabled/"]
@@ -55,5 +54,5 @@ EXPOSE 80/tcp 443/tcp
 
 #copy script to execute things
 COPY ["srcs/init.sh", "/"]
-#execute sh to start nginx, mariadb and php-fpm
+#execute sh to start nginx, mariadb and php
 ENTRYPOINT ["sh", "init.sh"] 
